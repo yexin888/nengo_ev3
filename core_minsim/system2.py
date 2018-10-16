@@ -129,7 +129,7 @@ class System(object):
                           tau_ref=ens.neuron_type.tau_ref,
                           #tau_ref = 0.003,
                           dt=sim.dt,
-                          learning_rate=1e-4,
+                          learning_rate=1e-4/3,
                           learning_filter = 0.01, 
                           ens_id = id_counter
                           )
