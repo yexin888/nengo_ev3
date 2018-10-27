@@ -36,7 +36,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
         self.radius=1.0
         #debug! test control
         self.D=1
-        self.D_in=1
+        self.D_in=2
         self.scale_add=1
         self.noise=0.001
         self.filter=0.01
@@ -110,6 +110,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
             if self.adapt:
 
 
+
                 adapt0 = nengo.Ensemble(self.n_neurons, dimensions=self.D_in,
                                        radius=self.radius, label='adapt', seed= self.seed)
                 #adapt1 = nengo.Ensemble(self.n_neurons, dimensions=self.D_in,
@@ -123,7 +124,8 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 minsim_ens = nengo.Ensemble(self.n_neurons, dimensions=self.D,
                                        radius=self.radius, label='minsim', seed= self.seed)
                 '''
-                nengo.Connection(minsim, adapt0, synapse=None)
+                nengo.Connection(minsim, adapt0[0], synapse=None)
+                nengo.Connection(desired, adapt0[1], synapse=None)
                 '''
                 nengo.Connection(minsim, adapt1, synapse=None)
                 nengo.Connection(minsim, adapt2, synapse=None)
