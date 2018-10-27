@@ -21,7 +21,7 @@ class ZeroDecoder(nengo.solvers.Solver):
 class AdaptiveBias(ctn_benchmark.Benchmark):
     def __init__(self):
         self.adapt = 1
-        self.Kp=2.0
+        self.Kp=1.0
         self.Kd=1.0
         self.Ki=0.0
         self.tau_d=0.001
@@ -36,7 +36,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
         self.radius=1.0
         #debug! test control
         self.D=1
-        self.D_in=9
+        self.D_in=1
         self.scale_add=1
         self.noise=0.001
         self.filter=0.01
@@ -117,14 +117,17 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 #adapt2 = nengo.Ensemble(self.n_neurons, dimensions=self.D_in,
                 #                       radius=self.radius, label='adapt', seed= self.seed+2)
                 #debug! test control
+                '''
                 desired_ens= nengo.Ensemble(self.n_neurons, dimensions=self.D,
                                        radius=self.radius, label='desired', seed= self.seed)
                 minsim_ens = nengo.Ensemble(self.n_neurons, dimensions=self.D,
                                        radius=self.radius, label='minsim', seed= self.seed)
                 '''
                 nengo.Connection(minsim, adapt0, synapse=None)
+                '''
                 nengo.Connection(minsim, adapt1, synapse=None)
                 nengo.Connection(minsim, adapt2, synapse=None)
+                '''
                 '''
                 conn0=nengo.Connection(desired, desired_ens, synapse = None)
                 conn1=nengo.Connection(minsim, minsim_ens, synapse = None)
@@ -151,6 +154,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                         solver=ZeroDecoder(),
                         learning_rule_type=nengo.PES(learning_rate = self.learning_rate ))
                 '''
+                '''
                 nengo.Connection(desired_ens, adapt0[3], synapse=0.001,
                         function=lambda x: [0]*self.D,
                         solver=ZeroDecoder(),
@@ -171,6 +175,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                         function=lambda x: [0]*self.D,
                         solver=ZeroDecoder(),
                         learning_rule_type=nengo.PES(learning_rate = self.learning_rate ))
+                '''
                 conn7 = nengo.Connection(adapt0[0], adapt0[4], synapse=1e-9,
                         function=lambda x: [0]*self.D,
                         solver=ZeroDecoder(),
@@ -192,6 +197,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                         solver=ZeroDecoder(),
                         learning_rule_type=nengo.PES(learning_rate = self.learning_rate ))
                 '''
+                '''
                 conn1 = nengo.Connection(adapt1, minsim, synapse=self.synapse,
                         function=lambda x: [0]*self.D,
                         solver=ZeroDecoder(),
@@ -202,6 +208,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                         learning_rule_type=nengo.PES(learning_rate = self.learning_rate/3 ))
                 '''
 
+                '''
                 nengo.Connection(control, conn2.learning_rule, synapse=None,
                         transform=-1)
                 nengo.Connection(control, conn3.learning_rule, synapse=None,
@@ -210,8 +217,10 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                         transform=-1)
                 nengo.Connection(control, conn5.learning_rule, synapse=None,
                         transform=-1)
+                '''
                 nengo.Connection(control, conn6.learning_rule, synapse=None,
                         transform=-1)
+                '''
                 nengo.Connection(control, conn7.learning_rule, synapse=None,
                         transform=-1)
                 nengo.Connection(control, conn8.learning_rule, synapse=None,
@@ -222,6 +231,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                         transform=-1)
                 nengo.Connection(control, conn11.learning_rule, synapse=None,
                         transform=-1)
+                '''
                 '''
                 nengo.Connection(control, conn1.learning_rule, synapse=None,
                         transform=-1)
