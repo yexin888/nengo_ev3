@@ -36,7 +36,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
         self.radius=1.0
         #debug! test control
         self.D=1
-        self.D_in=4
+        self.D_in=2
         self.scale_add=1
         self.noise=0.001
         self.filter=0.01
@@ -118,21 +118,20 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 #adapt2 = nengo.Ensemble(self.n_neurons, dimensions=self.D_in,
                 #                       radius=self.radius, label='adapt', seed= self.seed+2)
                 #debug! test control
-                '''
+                
                 desired_ens= nengo.Ensemble(self.n_neurons, dimensions=self.D,
                                        radius=self.radius, label='desired', seed= self.seed)
                 minsim_ens = nengo.Ensemble(self.n_neurons, dimensions=self.D,
                                        radius=self.radius, label='minsim', seed= self.seed)
-                '''
-                nengo.Connection(minsim, adapt0[0], synapse=None)
-                nengo.Connection(minsim, adapt0[1], synapse=1e-3)
+                
+                #nengo.Connection(minsim, adapt0[0], synapse=None)
+                #nengo.Connection(minsim, adapt0[1], synapse=1e-3)
                 #nengo.Connection(minsim, adapt0[2], synapse=1e-6)
-                nengo.Connection(desired, adapt0[2], synapse=None)
-                nengo.Connection(desired, adapt0[3], synapse=1e-3)
+                #nengo.Connection(desired, adapt0[2], synapse=None)
+                #nengo.Connection(desired, adapt0[3], synapse=1e-3)
                 '''
                 nengo.Connection(minsim, adapt1, synapse=None)
                 nengo.Connection(minsim, adapt2, synapse=None)
-                '''
                 '''
                 conn0=nengo.Connection(desired, desired_ens, synapse = None)
                 conn1=nengo.Connection(minsim, minsim_ens, synapse = None)
@@ -146,6 +145,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                         function=lambda x: [0]*self.D,
                         solver=ZeroDecoder(),
                         learning_rule_type=nengo.PES(learning_rate = self.learning_rate ))
+                '''
                 #nengo.Connection(minsim, adapt1[1], synapse=None)
                 #nengo.Connection(minsim, adapt2[1], synapse=None)
                 conn4=nengo.Connection(minsim_ens, adapt0[2], synapse=0.001,
@@ -213,11 +213,11 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                         learning_rule_type=nengo.PES(learning_rate = self.learning_rate/3 ))
                 '''
 
-                '''
                 nengo.Connection(control, conn2.learning_rule, synapse=None,
                         transform=-1)
                 nengo.Connection(control, conn3.learning_rule, synapse=None,
                         transform=-1)
+                '''
                 nengo.Connection(control, conn4.learning_rule, synapse=None,
                         transform=-1)
                 nengo.Connection(control, conn5.learning_rule, synapse=None,
