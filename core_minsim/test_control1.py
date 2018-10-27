@@ -125,7 +125,8 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                                        radius=self.radius, label='minsim', seed= self.seed)
                 '''
                 nengo.Connection(minsim, adapt0[0], synapse=None)
-                nengo.Connection(desired, adapt0[1], synapse=None)
+                nengo.Connection(minsim, adapt0[1], synapse=1e-3)
+                #nengo.Connection(desired, adapt0[1], synapse=None)
                 '''
                 nengo.Connection(minsim, adapt1, synapse=None)
                 nengo.Connection(minsim, adapt2, synapse=None)
