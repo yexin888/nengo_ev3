@@ -36,7 +36,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
         self.radius=1.0
         #debug! test control
         self.D=1
-        self.D_in=3
+        self.D_in=4
         self.scale_add=1
         self.noise=0.001
         self.filter=0.01
@@ -126,8 +126,9 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 '''
                 nengo.Connection(minsim, adapt0[0], synapse=None)
                 nengo.Connection(minsim, adapt0[1], synapse=1e-3)
-                nengo.Connection(minsim, adapt0[2], synapse=1e-6)
-                #nengo.Connection(desired, adapt0[1], synapse=None)
+                #nengo.Connection(minsim, adapt0[2], synapse=1e-6)
+                nengo.Connection(desired, adapt0[2], synapse=None)
+                nengo.Connection(desired, adapt0[3], synapse=1e-3)
                 '''
                 nengo.Connection(minsim, adapt1, synapse=None)
                 nengo.Connection(minsim, adapt2, synapse=None)
