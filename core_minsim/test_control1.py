@@ -25,7 +25,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
         self.Kd=1.0
         self.Ki=0.0
         self.tau_d=0.001
-        self.T= 40 
+        self.T= 400 
         self.period=8.0
         self.adapt=True
         #self.adapt=False
@@ -37,7 +37,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
         self.radius=1.0
         #debug! test control
         self.D=1
-        self.D_in=1
+        self.D_in=2
         self.scale_add=1
         self.noise=0.001
         self.filter=0.01
@@ -118,10 +118,10 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
 
 
             def arctansine(t):
-                return 2*np.arctan(np.sin(2*np.pi*t/self.period)*15)/np.pi
+                #return 2*np.arctan(np.sin(2*np.pi*t/self.period)*15)/np.pi
                 #return np.sin(2*np.pi*t/self.period)
                 #return 2*np.arctan(np.sin(2*np.pi*t*0.1)/.01)/np.pi
-                #return sig.square(1 / self.period * np.pi *   t)*1
+                return sig.square(1 / self.period * 2 *np.pi *   t)*1
             def arctansine_future(t):
                 return 2*np.arctan(np.sin(2*np.pi*(t+self.delta_t)/self.period)*15)/np.pi
             #desired = nengo.Node(square_signal1, label='desired')
@@ -169,9 +169,9 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 nengo.Connection(minsim, adapt1, synapse=None)
                 nengo.Connection(minsim, adapt2, synapse=None)
                 '''
-                #conn0=nengo.Connection(desired, qd_q_ens, synapse = None)
-                #conn17=nengo.Connection(minsim, qd_q_ens, synapse = None, transform=-1)
-                conn17=nengo.Connection(minsim, qd_q_ens, synapse = None )
+                conn0=nengo.Connection(desired, qd_q_ens, synapse = None)
+                conn17=nengo.Connection(minsim, qd_q_ens, synapse = None, transform=-1)
+                #conn17=nengo.Connection(minsim, qd_q_ens, synapse = None )
                 #conn13=nengo.Connection(desired_future, desired_future_ens, synapse = None)
                 #conn1=nengo.Connection(minsim, minsim_ens, synapse = None)
                 '''
@@ -189,6 +189,8 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 #conn2=nengo.Connection(desired_ens, adapt0[0], synapse=1e-9)
                 #conn3=nengo.Connection(minsim_ens, adapt0[0], synapse=1e-9)
                 conn18=nengo.Connection(qd_q_ens, adapt0[0], synapse=None)
+                conn19=nengo.Connection(qd_q_ens, adapt0[1], synapse=1e-6, transform = 1)
+                #conn20=nengo.Connection(qd_q_ens, adapt0[1], synapse=None, transform = -1)
                 #conn14=nengo.Connection(desired_future_ens, adapt0[2], synapse=1e-9)
                 #conn4=nengo.Connection(desired_ens, adapt0[3], synapse=1e-6)
                 #conn5=nengo.Connection(minsim_ens, adapt0[4], synapse=1e-6)
