@@ -25,18 +25,18 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
         self.Kd=1.0
         self.Ki=0.0
         self.tau_d=0.001
-        self.T= 40
-        self.period=5.0
+        self.T= 40 
+        self.period=4.0
         self.adapt=True
         #self.adapt=False
-        self.n_neurons=5000
+        self.n_neurons=500
         self.learning_rate=1e-4
         self.max_freq=1.0
         self.synapse=0.001
         self.radius=1.0
         #debug! test control
         self.D=1
-        self.D_in=2
+        self.D_in=1
         self.scale_add=1
         self.noise=0.001
         self.filter=0.01
@@ -92,7 +92,18 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 return system.step(x)
             
             def square_signal1(t):
-                return np.sin(2*np.pi*t/self.period)
+                if (t-int(t/(self.period*2))*self.period*2)<(self.period*2/8.0):
+                    return np.sin(2*np.pi*(t-int(t/(self.period*2))*self.period*2)/self.period)
+                elif (t-int(t/(self.period*2))*self.period*2)<(self.period*2/8.0*3):
+                    return sig.square(2 / self.period * np.pi *  (t-int(t/(self.period*2))*self.period*2-self.period/4.) )*1
+                elif (t-int(t/(self.period*2))*self.period*2)<(self.period*2/8.0*5):
+                    return np.sin(2*np.pi*(t-int(t/(self.period*2))*self.period*2-self.period/2.)/self.period)
+                elif (t-int(t/(self.period*2))*self.period*2)<(self.period*2/8.0*7):
+                    return sig.square(2 / self.period * np.pi *  (t-int(t/(self.period*2))*self.period*2-self.period*3./4.) )*1
+                else:
+                    return np.sin(2*np.pi*(t-int(t/(self.period*2))*self.period*2-self.period)/self.period)
+
+                #return np.sin(2*np.pi*t/self.period)
                 #return 2*np.arctan(np.sin(2*np.pi*t*0.1)/.01)/np.pi
                 #return sig.square(1 / self.period * np.pi *   t)*1
             desired = nengo.Node(square_signal1, label='desired')
@@ -122,10 +133,10 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 
                 #desired_ens= nengo.Ensemble(self.n_neurons, dimensions=self.D,
                 #                       radius=self.radius, label='desired', seed= self.seed)
-                minsim_ens = nengo.Ensemble(self.n_neurons, dimensions=self.D,
-                                       radius=self.radius, label='minsim', seed= self.seed)
+                #minsim_ens = nengo.Ensemble(self.n_neurons, dimensions=self.D,
+                #                       radius=self.radius, label='minsim', seed= self.seed)
                 
-                #nengo.Connection(minsim, adapt0[0], synapse=None)
+                nengo.Connection(minsim, adapt0[0], synapse=None)
                 #nengo.Connection(minsim, adapt0[1], synapse=1e-3)
                 #nengo.Connection(minsim, adapt0[2], synapse=1e-6)
                 #nengo.Connection(desired, adapt0[2], synapse=None)
@@ -135,7 +146,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 nengo.Connection(minsim, adapt2, synapse=None)
                 '''
                 #conn0=nengo.Connection(desired, desired_ens, synapse = None)
-                conn1=nengo.Connection(minsim, minsim_ens, synapse = None)
+                #conn1=nengo.Connection(minsim, minsim_ens, synapse = None)
                 #conn2=nengo.Connection(desired_ens, adapt0[0], synapse=1e-9,
                 #        function=lambda x: [0]*self.D,
                 #        solver=ZeroDecoder(),
@@ -149,7 +160,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 '''
                 conn2=nengo.Connection(desired_ens, adapt0[0], synapse=1e-9)
                 '''
-                conn3=nengo.Connection(minsim_ens, adapt0[0], synapse=1e-9)
+                #conn3=nengo.Connection(minsim_ens, adapt0[0], synapse=1e-9)
                 '''
                 #nengo.Connection(minsim, adapt1[1], synapse=None)
                 #nengo.Connection(minsim, adapt2[1], synapse=None)
