@@ -25,11 +25,11 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
         self.Kd=1.0
         self.Ki=0.0
         self.tau_d=0.001
-        self.T= 400 
+        self.T= 40 
         self.period=8.0
         self.adapt=True
         #self.adapt=False
-        self.n_neurons=5000
+        self.n_neurons=500
         self.n_neurons2=500
         self.learning_rate=1e-4
         self.max_freq=1.0
@@ -37,7 +37,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
         self.radius=1.0
         #debug! test control
         self.D=1
-        self.D_in=11
+        self.D_in=1
         self.scale_add=1
         self.noise=0.001
         self.filter=0.01
@@ -151,12 +151,14 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 #                       radius=self.radius, label='adapt', seed= self.seed+2)
                 #debug! test control
                 
-                desired_ens= nengo.Ensemble(self.n_neurons2, dimensions=self.D,
+                qd_q_ens= nengo.Ensemble(self.n_neurons2, dimensions=self.D,
                                        radius=self.radius, label='desired', seed= self.seed)
-                desired_future_ens= nengo.Ensemble(self.n_neurons2, dimensions=self.D,
-                                       radius=self.radius, label='desired_future', seed= self.seed)
-                minsim_ens = nengo.Ensemble(self.n_neurons2, dimensions=self.D,
-                                       radius=self.radius, label='minsim', seed= self.seed)
+                #desired_ens= nengo.Ensemble(self.n_neurons2, dimensions=self.D,
+                #                       radius=self.radius, label='desired', seed= self.seed)
+                #desired_future_ens= nengo.Ensemble(self.n_neurons2, dimensions=self.D,
+                #                       radius=self.radius, label='desired_future', seed= self.seed)
+                #minsim_ens = nengo.Ensemble(self.n_neurons2, dimensions=self.D,
+                #                       radius=self.radius, label='minsim', seed= self.seed)
                 
                 #nengo.Connection(minsim, adapt0[0], synapse=1e-9)
                 #nengo.Connection(minsim, adapt0[1], synapse=1e-3)
@@ -167,9 +169,10 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 nengo.Connection(minsim, adapt1, synapse=None)
                 nengo.Connection(minsim, adapt2, synapse=None)
                 '''
-                conn0=nengo.Connection(desired, desired_ens, synapse = None)
-                conn13=nengo.Connection(desired_future, desired_future_ens, synapse = None)
-                conn1=nengo.Connection(minsim, minsim_ens, synapse = None)
+                conn0=nengo.Connection(desired, qd_q_ens, synapse = None)
+                conn17=nengo.Connection(minsim, qd_q_ens, synapse = None, transform=-1)
+                #conn13=nengo.Connection(desired_future, desired_future_ens, synapse = None)
+                #conn1=nengo.Connection(minsim, minsim_ens, synapse = None)
                 '''
                 conn2=nengo.Connection(desired_ens, adapt0[0], synapse=1e-9,
                         function=lambda x: [0]*self.D,
@@ -182,15 +185,16 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                         solver=ZeroDecoder(),
                         learning_rule_type=nengo.PES(learning_rate = self.learning_rate ))
                 '''
-                conn2=nengo.Connection(desired_ens, adapt0[0], synapse=1e-9)
-                conn3=nengo.Connection(minsim_ens, adapt0[1], synapse=1e-9)
-                conn14=nengo.Connection(desired_future_ens, adapt0[2], synapse=1e-9)
-                conn4=nengo.Connection(desired_ens, adapt0[3], synapse=1e-6)
-                conn5=nengo.Connection(minsim_ens, adapt0[4], synapse=1e-6)
-                conn15=nengo.Connection(desired_future_ens, adapt0[9], synapse=1e-6)
-                conn6=nengo.Connection(desired_ens, adapt0[5], synapse=1e-3)
-                conn7=nengo.Connection(minsim_ens, adapt0[6], synapse=1e-3)
-                conn16=nengo.Connection(desired_future_ens, adapt0[10], synapse=1e-3)
+                #conn2=nengo.Connection(desired_ens, adapt0[0], synapse=1e-9)
+                #conn3=nengo.Connection(minsim_ens, adapt0[0], synapse=1e-9)
+                conn18=nengo.Connection(qd_q_ens, adapt0[0], synapse=None)
+                #conn14=nengo.Connection(desired_future_ens, adapt0[2], synapse=1e-9)
+                #conn4=nengo.Connection(desired_ens, adapt0[3], synapse=1e-6)
+                #conn5=nengo.Connection(minsim_ens, adapt0[4], synapse=1e-6)
+                #conn15=nengo.Connection(desired_future_ens, adapt0[9], synapse=1e-6)
+                #conn6=nengo.Connection(desired_ens, adapt0[5], synapse=1e-3)
+                #conn7=nengo.Connection(minsim_ens, adapt0[6], synapse=1e-3)
+                #conn16=nengo.Connection(desired_future_ens, adapt0[10], synapse=1e-3)
                 #nengo.Connection(minsim, adapt1[1], synapse=None)
                 #nengo.Connection(minsim, adapt2[1], synapse=None)
                 '''
@@ -213,8 +217,8 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 #nengo.Connection(control, adapt0[5], synapse=0.001)
                 #nengo.Connection(control, adapt1[5], synapse=0.001)
                 #nengo.Connection(control, adapt2[5], synapse=0.001)
-                nengo.Connection(adapt0[0], adapt0[7], synapse=1e-9)
-                nengo.Connection(control, adapt0[8], synapse=1e-9)
+                #nengo.Connection(adapt0[0], adapt0[7], synapse=1e-9)
+                #nengo.Connection(control, adapt0[8], synapse=1e-9)
                 #nengo.Connection(adapt1[0], adapt1[5], synapse=0.001)
                 #nengo.Connection(adapt2[0], adapt2[5], synapse=0.001)
                 conn6 = nengo.Connection(adapt0[0], minsim, synapse=self.synapse,
