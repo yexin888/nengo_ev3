@@ -25,7 +25,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
         self.Kd=1.0
         self.Ki=0.0
         self.tau_d=0.001
-        self.T= 400 
+        self.T= 120 
         self.period=8.0
         self.adapt=True
         #self.adapt=False
@@ -37,7 +37,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
         self.radius=1.0
         #debug! test control
         self.D=1
-        self.D_in=2
+        self.D_in=1
         self.scale_add=1
         self.noise=0.001
         self.filter=0.01
@@ -88,7 +88,8 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
             self.system_control = []
             def minsim_system(t, x):
                 self.system_control.append(x)
-                self.system_desired.append(np.array([arctansine(t)]))
+                #self.system_desired.append(np.array([arctansine(t)]))
+                self.system_desired.append(np.array([square_signal1(t)]))
                 self.system_t.append(t)
                 self.system_state.append(system.state)
                 return system.step(x)
@@ -124,8 +125,8 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 return sig.square(1 / self.period * 2 *np.pi *   t)*1
             def arctansine_future(t):
                 return 2*np.arctan(np.sin(2*np.pi*(t+self.delta_t)/self.period)*15)/np.pi
-            #desired = nengo.Node(square_signal1, label='desired')
-            desired = nengo.Node(arctansine, label='desired')
+            desired = nengo.Node(square_signal1, label='desired')
+            #desired = nengo.Node(arctansine, label='desired')
             desired_future = nengo.Node(arctansine_future, label='desired_future')
 
             minsim = nengo.Node(minsim_system, size_in=self.D, size_out=self.D,
@@ -189,7 +190,7 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 #conn2=nengo.Connection(desired_ens, adapt0[0], synapse=1e-9)
                 #conn3=nengo.Connection(minsim_ens, adapt0[0], synapse=1e-9)
                 conn18=nengo.Connection(qd_q_ens, adapt0[0], synapse=None)
-                conn19=nengo.Connection(qd_q_ens, adapt0[1], synapse=1e-6, transform = 1)
+                #conn19=nengo.Connection(qd_q_ens, adapt0[1], synapse=1e-6, transform = 1)
                 #conn20=nengo.Connection(qd_q_ens, adapt0[1], synapse=None, transform = -1)
                 #conn14=nengo.Connection(desired_future_ens, adapt0[2], synapse=1e-9)
                 #conn4=nengo.Connection(desired_ens, adapt0[3], synapse=1e-6)
