@@ -169,8 +169,9 @@ class AdaptiveBias(ctn_benchmark.Benchmark):
                 nengo.Connection(minsim, adapt1, synapse=None)
                 nengo.Connection(minsim, adapt2, synapse=None)
                 '''
-                conn0=nengo.Connection(desired, qd_q_ens, synapse = None)
-                conn17=nengo.Connection(minsim, qd_q_ens, synapse = None, transform=-1)
+                #conn0=nengo.Connection(desired, qd_q_ens, synapse = None)
+                #conn17=nengo.Connection(minsim, qd_q_ens, synapse = None, transform=-1)
+                conn17=nengo.Connection(minsim, qd_q_ens, synapse = None )
                 #conn13=nengo.Connection(desired_future, desired_future_ens, synapse = None)
                 #conn1=nengo.Connection(minsim, minsim_ens, synapse = None)
                 '''
